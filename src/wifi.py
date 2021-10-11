@@ -2,23 +2,33 @@ import socket
 import network
 import time
 from machine import Pin
+import config
 
-
-host='192.168.3.147'
-port = 10000
+led = Pin(2, Pin.OUT)
+AP_SSID = 'esp32-sunlight'
+AP_PASSWORD = '123456789'
 
 MAX_WAIT_SEC = 10
 wlan=None
 s=None
 
+def initializeNetwork():
+  print("Initializing network ...")
+  if(connectWifi(config.config["ssid"],config.config["password"])):           
+    print("WIFI !")
+    led.value(1)
+  else:
+    print("HOTSPOT !")
+    led.value(0)
+    createHotspot(AP_SSID,AP_PASSWORD)
+
 def connectWifi(ssid,passwd):
   global wlan
   try:
-    wlan=network.WLAN(network.STA_IF)                 #create a wlan object
-    wlan.active(True)                                 #Activate the network interface
-    wlan.disconnect()                                 #Disconnect the last connected WiFi
-    wlan.connect(ssid,passwd)                         #connect wifi
-    
+    wlan=network.WLAN(network.STA_IF)                 
+    wlan.active(True)                                 
+    wlan.disconnect()                                 
+    wlan.connect(ssid,passwd)
     
     wait_cycle = 0
     while(wlan.ifconfig()[0]=='0.0.0.0'):

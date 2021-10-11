@@ -1,6 +1,4 @@
 import json
-import sys
-import time
 
 config = {
     "ssid": "",
@@ -11,8 +9,6 @@ def write_config_file():
     global config
     with open("config.txt", 'w') as fp:
         json.dump(config, fp)
-    time.sleep(2)
-    sys.exit()
 
 def read_config_file():
     global config

@@ -21,14 +21,7 @@ try:
     print(os.listdir())
     #os.remove("config.txt")
 
-    if(wifi.connectWifi(config.config["ssid"],config.config["password"])):           
-        print("WIFI !")
-        led.value(1)
-    else:
-        print("no wifi :(")
-        led.value(0)
-        wifi.createHotspot(AP_SSID,AP_PASSWORD)
-
+    wifi.initializeNetwork()
     webserver.app.run(debug=True, host = "", port=80)    
 except Exception as e:
     print(e)
