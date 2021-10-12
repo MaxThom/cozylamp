@@ -17,14 +17,18 @@ def index(req, resp):
   </head>
   <body>
     <h1>The cozy lamp🕯️</h1>
+    <h3>Status</h3>
+      <span><strong>Network:</strong> {config.status["network"]}</span></br>
+      <span><strong>Server:</strong> {config.status["server"]}</span>
+
     <h3>Wifi settings</h3>
     
     <form action='wifi_form' method='POST'>
         <strong>SSID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong> <input name='ssid' value='{config.config["ssid"]}'/></br>
         <strong>Password</strong> <input name='password' value='{config.config["password"]}'/></br>
         <ul>
-          <li><i>blue led mean board is connected to wifi</i></li>
-          <li><i>no blue led mean board is in hotspot mode</i></li>
+          <li><i>blue led on mean board is connected to wifi</i></li>
+          <li><i>blue led off mean board is in hotspot mode</i></li>
         </ul>
         
         </br>
@@ -35,7 +39,7 @@ def index(req, resp):
 """)
  
 @app.route("/wifi_form")
-def index(req, resp):
+def form_after(req, resp):
     if req.method == "POST":
         yield from req.read_form_data()
     else:  
@@ -73,3 +77,7 @@ def index(req, resp):
       wifi.initializeNetwork()
      
     config.write_config_file()
+
+#@app.route("/favicon.ico")
+#def favicon(req, resp):
+#  yield from app.sendfile(resp, "favicon.ico")

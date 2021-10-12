@@ -5,6 +5,11 @@ config = {
     "password": ""
 }
 
+status = {
+    "network": "",
+    "server": "connected 🟢🔴"
+}
+
 def write_config_file():
     global config
     with open("config.txt", 'w') as fp:
