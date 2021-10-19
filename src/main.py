@@ -15,9 +15,8 @@ p = 5
 np = neopixel.NeoPixel(Pin(p), n)
 
 for i in range(n):
-    np[i] = (10, 0, 0)
+    np[i] = (0, 0, 0)
 np.write()
-    #time.sleep(0.1)
 
 intTimeUp = 0
 intTimeUpMid = 0
@@ -26,8 +25,8 @@ intTimeDownMid = 0
 intTimeMid = 0
 debTime = 100
 lastPos = ""
-ON = 0
-OFF = 1
+ON = 1
+OFF = 0
 
 def button_handler_up(pin):
   global intTimeUp
@@ -46,7 +45,6 @@ def button_handler_up(pin):
           np[i] = (0, 0, 0)
       np.write()
     intTimeUpMid = utime.ticks_ms()
-    
 
 def button_handler_down(pin):  
   global intTimeDown
@@ -73,41 +71,43 @@ def button_handler(pin):
     global btn_up
     global btn_down
     global lastPos
-    #print(f"UP {btn_up.value()}")
-    #print(f"DN {btn_down.value()}")
-    if btn_up.value() == ON :
-        if utime.ticks_diff(utime.ticks_ms(), intTimeUp) > debTime:
+    
+    #print(btn_up.value())
+    #print(btn_down.value())
+    if btn_up.value() == ON and btn_down.value() == OFF:
+        if lastPos != "UP" and utime.ticks_diff(utime.ticks_ms(), intTimeUp) > debTime:
             print("UP")
             for i in range(n):
                 np[i] = (10, 0, 10)
             np.write()
             lastPos = "UP"
             intTimeUp = utime.ticks_ms()
-    elif btn_down.value() == ON:
-        if utime.ticks_diff(utime.ticks_ms(), intTimeDown) > debTime:
+    elif btn_down.value() == ON and btn_up.value() == OFF:
+        if lastPos != "DOWN" and utime.ticks_diff(utime.ticks_ms(), intTimeDown) > debTime:
             print("DOWN")
             for i in range(n):
                 np[i] = (10, 10, 0)
             np.write()
             lastPos = "DOWN"
             intTimeDown = utime.ticks_ms()
-    elif btn_up.value() == OFF and btn_down.value() == OFF:
-        if utime.ticks_diff(utime.ticks_ms(), intTimeMid) > debTime:
+    elif btn_up.value() == ON and btn_down.value() == ON:
+        if lastPos != "MID" and utime.ticks_diff(utime.ticks_ms(), intTimeMid) > debTime:
             print("MIDDLE")
-            #print(f"UP {btn_up.value()}")
-            #print(f"DN {btn_down.value()}")
             for i in range(n):
                 np[i] = (0, 0, 0)
             np.write()
             lastPos = "MID"
             intTimeMid = utime.ticks_ms()
 
-btn_down = Pin(2, Pin.OUT)
-btn_down.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler_down)
-#btn_down.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler)
-btn_up = Pin(4, Pin.OUT)
-btn_up.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler_up)
-#btn_up.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler)
+btn_down = Pin(2, Pin.OUT, value=1)
+#btn_down.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler_down)
+btn_down.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler)
+btn_up = Pin(4, Pin.OUT, value=1)
+#btn_up.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler_up)
+btn_up.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler)
+#btn_down.value(0)
+#btn_up.value(0)
+
 print(btn_down.value())
 print(btn_up.value())
 
