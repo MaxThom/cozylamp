@@ -9,61 +9,63 @@ import webserver
 import config
 import utime
 
-n = 37
-p = 5
+# LEDs
+pixels = 37
+led_pin = 5
+pixel_strip = None
 
-np = neopixel.NeoPixel(Pin(p), n)
-
-for i in range(n):
-    np[i] = (0, 0, 0)
-np.write()
-
+# Button
+btn_up_pin = 4
+btn_down_pin = 2
 intTimeUp = 0
-intTimeUpMid = 0
 intTimeDown = 0
-intTimeDownMid = 0
 intTimeMid = 0
 debTime = 100
 lastPos = ""
+btn_up = None
+btn_down = None
 ON = 1
 OFF = 0
 
-def button_handler_up(pin):
-  global intTimeUp
-  global intTimeUpMid
-  if pin.value() == ON:
-    if utime.ticks_diff(utime.ticks_ms(), intTimeUp) > debTime:
-      print("UP")
-      for i in range(n):
-          np[i] = (10, 0, 10)
-      np.write()
-    intTimeUp = utime.ticks_ms()
-  else:
-    if utime.ticks_diff(utime.ticks_ms(), intTimeUpMid) > debTime:
-      print("MIDDLE")
-      for i in range(n):
-          np[i] = (0, 0, 0)
-      np.write()
-    intTimeUpMid = utime.ticks_ms()
+# Network
+SSID="ASUS_28_2G"
+PASSWORD="88483306"
+AP_SSID = 'esp32-sunlight'
+AP_PASSWORD = '123456789'
 
-def button_handler_down(pin):  
-  global intTimeDown
-  global intTimeDownMid
-  if pin.value() == ON:
-      if utime.ticks_diff(utime.ticks_ms(), intTimeDown) > debTime:
-        print("DOWN")
-        for i in range(n):
-            np[i] = (10, 10, 0)
-        np.write()        
-        intTimeDown = utime.ticks_ms()
-  else:
-    if utime.ticks_diff(utime.ticks_ms(), intTimeDownMid) > debTime:
-      print("MIDDLE")
-      for i in range(n):
-          np[i] = (0, 0, 0)
-      np.write()
-    intTimeDownMid = utime.ticks_ms()
-  
+def main():
+    try:
+        config.read_config_file()
+        print(config.config)
+        print(os.listdir())
+        #os.remove("config.txt")
+
+        initialize_button_led()
+        wifi.initializeNetwork()
+        webserver.app.run(debug=True, host = "", port=80)    
+    except Exception as e:
+        print(e)
+        wifi.closeWifi()
+
+def initialize_button_led():
+    global btn_up
+    global btn_down
+    global pixel_strip
+
+    # LEDs
+    pixel_strip = neopixel.NeoPixel(Pin(led_pin), pixels)
+    for i in range(pixels):
+        pixel_strip[i] = (0, 0, 0)
+    pixel_strip.write()
+
+    # Button
+    btn_down = Pin(btn_down_pin, Pin.OUT, value=ON)    
+    btn_down.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler)
+    btn_up = Pin(btn_up_pin, Pin.OUT, value=ON)    
+    btn_up.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler)
+    print(btn_down.value())
+    print(btn_up.value())
+
 def button_handler(pin):
     global intTimeUp
     global intTimeMid
@@ -71,59 +73,29 @@ def button_handler(pin):
     global btn_up
     global btn_down
     global lastPos
-    
-    #print(btn_up.value())
-    #print(btn_down.value())
     if btn_up.value() == ON and btn_down.value() == OFF:
         if lastPos != "UP" and utime.ticks_diff(utime.ticks_ms(), intTimeUp) > debTime:
             print("UP")
-            for i in range(n):
-                np[i] = (10, 0, 10)
-            np.write()
+            for i in range(pixels):
+                pixel_strip[i] = (10, 0, 10)
+            pixel_strip.write()
             lastPos = "UP"
             intTimeUp = utime.ticks_ms()
     elif btn_down.value() == ON and btn_up.value() == OFF:
         if lastPos != "DOWN" and utime.ticks_diff(utime.ticks_ms(), intTimeDown) > debTime:
             print("DOWN")
-            for i in range(n):
-                np[i] = (10, 10, 0)
-            np.write()
+            for i in range(pixels):
+                pixel_strip[i] = (10, 10, 0)
+            pixel_strip.write()
             lastPos = "DOWN"
             intTimeDown = utime.ticks_ms()
     elif btn_up.value() == ON and btn_down.value() == ON:
         if lastPos != "MID" and utime.ticks_diff(utime.ticks_ms(), intTimeMid) > debTime:
             print("MIDDLE")
-            for i in range(n):
-                np[i] = (0, 0, 0)
-            np.write()
+            for i in range(pixels):
+                pixel_strip[i] = (0, 0, 0)
+            pixel_strip.write()
             lastPos = "MID"
             intTimeMid = utime.ticks_ms()
 
-btn_down = Pin(2, Pin.OUT, value=1)
-#btn_down.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler_down)
-btn_down.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler)
-btn_up = Pin(4, Pin.OUT, value=1)
-#btn_up.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler_up)
-btn_up.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler)
-#btn_down.value(0)
-#btn_up.value(0)
-
-print(btn_down.value())
-print(btn_up.value())
-
-SSID="ASUS_28_2G"
-PASSWORD="88483306"
-AP_SSID = 'esp32-sunlight'
-AP_PASSWORD = '123456789'
-
-try:
-    config.read_config_file()
-    print(config.config)
-    print(os.listdir())
-    #os.remove("config.txt")
-
-    wifi.initializeNetwork()
-    webserver.app.run(debug=True, host = "", port=80)    
-except Exception as e:
-    print(e)
-    wifi.closeWifi()
+main()
