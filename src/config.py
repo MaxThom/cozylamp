@@ -2,12 +2,19 @@ import json
 
 config = {
     "ssid": "",
-    "password": ""
+    "password": "",
+    "url": "",
+    "group_key": "",
+    "device_key": "",
+    "on_color": "", 
+    "thinking_color": ""
 }
 
 status = {
     "network": "",
-    "server": "connected 🟢🔴"
+    "server": "diconnected 🔴",
+    "light": "",
+    "color": "on_color"
 }
 
 def write_config_file():
@@ -27,6 +34,11 @@ def set_factory_config():
     global config
     config = {
         "ssid": "",
-        "password": ""
+        "password": "",
+        "url": "",
+        "group_key": "",
+        "device_key": "",
+        "on_color": "#feffb3", 
+        "thinking_color": "#e100ff"
     }
     write_config_file()

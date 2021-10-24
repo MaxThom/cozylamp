@@ -17,11 +17,9 @@ def initializeNetwork():
   if(connectWifi(config.config["ssid"],config.config["password"])):           
     print("WIFI !")
     config.status["network"] = "wifi 📶"
-    #led.value(1)
   else:
     print("HOTSPOT !")
     config.status["network"] = "hotspot 🖧"
-    #led.value(0)
     createHotspot(AP_SSID,AP_PASSWORD)
 
 def connectWifi(ssid,passwd):

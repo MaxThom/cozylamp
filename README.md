@@ -11,4 +11,4 @@ wifi.connectWifi("ASUS_28_2G", "88483306")
 import upip
 upip.install('picoweb')
 upip.install('pycopy-ulogging')
-upip.install('utemplate')
+upip.install('urequests')

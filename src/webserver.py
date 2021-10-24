@@ -19,26 +19,35 @@ def index(req, resp):
     <h1>The cozy lamp🕯️</h1>
     <h3>Status</h3>
       <span><strong>Network:</strong> {config.status["network"]}</span></br>
-      <span><strong>Server:</strong> {config.status["server"]}</span>
+      <span><strong>Server:</strong> {config.status["server"]}</span></br>
+      <span><strong>Light:</strong> {config.status["light"]}</span>
+    <form action='settings_form' method='POST'>
+      <h3>Color settings</h3>      
+      <div>
+        <strong>On&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+        <input type="color" id="head" name="head" value="{config.config["on_color"]}></br>
+        <strong>Thinking of you</strong>
+        <input type="color" id="head" name="head" value="{config.config["thinking_color"]}"></br>
+      </div>
 
-    <h3>Wifi settings</h3>
-    
-    <form action='wifi_form' method='POST'>
+      <h3>Wifi settings</h3>      
         <strong>SSID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong> <input name='ssid' value='{config.config["ssid"]}'/></br>
-        <strong>Password</strong> <input name='password' value='{config.config["password"]}'/></br>
-        <ul>
-          <li><i>blue led on mean board is connected to wifi</i></li>
-          <li><i>blue led off mean board is in hotspot mode</i></li>
-        </ul>
-        
+        <strong>Password</strong> <input name='password' value='{config.config["password"]}'/></br>               
         </br>
-        <input type='submit'>
+
+      <h3>Lamp settings</h3>
+        <strong>Server Url</strong> <input name='url' value='{config.config["url"]}'/></br>
+        <strong>Group Key</strong> <input name='group_key' value='{config.config["group_key"]}'/></br>
+        <strong>Device Key</strong> <input name='device_key' value='{config.config["device_key"]}'/></br>
+        </br>
+
+      <input type='submit'>
     </form>
   </body>
 </html> 
 """)
  
-@app.route("/wifi_form")
+@app.route("/settings_form")
 def form_after(req, resp):
     if req.method == "POST":
         yield from req.read_form_data()
@@ -76,6 +85,9 @@ def form_after(req, resp):
       config.config["password"] = req.form['password']   
       wifi.initializeNetwork()
      
+    config.config["url"] = req.form['url']
+    config.config["group_key"] = req.form['group_key']
+    config.config["device_key"] = req.form['device_key']
     config.write_config_file()
 
 #@app.route("/favicon.ico")
