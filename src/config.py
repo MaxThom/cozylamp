@@ -6,7 +6,7 @@ config = {
     "url": "",
     "group_key": "",
     "device_key": "",
-    "on_color": "", 
+    "on_color": "",
     "thinking_color": ""
 }
 
@@ -25,7 +25,7 @@ def write_config_file():
 def read_config_file():
     global config
     try:
-        with open("config.txt") as fp:            
+        with open("config.txt") as fp:
             config = json.load(fp)
     except:
         set_factory_config()
@@ -38,7 +38,7 @@ def set_factory_config():
         "url": "",
         "group_key": "",
         "device_key": "",
-        "on_color": "#feffb3", 
+        "on_color": "#feffb3",
         "thinking_color": "#e100ff"
     }
     write_config_file()

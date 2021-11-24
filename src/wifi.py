@@ -14,7 +14,7 @@ s=None
 
 def initializeNetwork():
   print("Initializing network ...")
-  if(connectWifi(config.config["ssid"],config.config["password"])):           
+  if(connectWifi(config.config["ssid"],config.config["password"])):
     print("WIFI !")
     config.status["network"] = "wifi 📶"
   else:
@@ -25,11 +25,11 @@ def initializeNetwork():
 def connectWifi(ssid,passwd):
   global wlan
   try:
-    wlan=network.WLAN(network.STA_IF)                 
-    wlan.active(True)                                 
-    wlan.disconnect()                                 
+    wlan=network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.disconnect()
     wlan.connect(ssid,passwd)
-    
+
     wait_cycle = 0
     while(wlan.ifconfig()[0]=='0.0.0.0'):
       time.sleep(1)
@@ -40,7 +40,7 @@ def connectWifi(ssid,passwd):
     return True
   except:
     return False
-  
+
 def closeWifi():
   if (s):
     s.close()

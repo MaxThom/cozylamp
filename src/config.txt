@@ -1,1 +1,1 @@
-{"ssid": "ASUS_28_2G", "password": "88483306", "url": "https://192.168.1.105:49153", "group_key": "max_cath", "device_key": "max", "on_color": "#feffb3", "thinking_color": "#e100ff"}
+{"ssid": "NetComm 3296", "password": "Huqupihuwo", "url": "https://cozylamp.maxthom.ca", "group_key": "max_cath", "device_key": "max", "on_color": "#1b297b", "thinking_color": "#1e7b1b"}

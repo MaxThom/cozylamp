@@ -11,7 +11,7 @@ def updateStatus():
         if config.status["light"] == "💡":
             try:
                 print(f"{config.config['url']}/api/updatestatus/{config.config['device_key']}/{config.config['group_key']}")
-                response = urequests.get(f"{config.config['url']}/api/updatestatus/{config.config['device_key']}/{config.config['group_key']}")                
+                response = urequests.get(f"{config.config['url']}/api/updatestatus/{config.config['device_key']}/{config.config['group_key']}")
                 values = response.json()
                 print(values)
 

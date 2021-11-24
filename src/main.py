@@ -18,8 +18,8 @@ def main():
         io.initialize_io()
         wifi.initializeNetwork()
         _thread.start_new_thread(request.updateStatus, ())
-        
-        webserver.app.run(debug=True, host = "", port=80)            
+
+        webserver.app.run(debug=True, host = "", port=80)
     except Exception as e:
         print(e)
         wifi.closeWifi()

@@ -5,12 +5,12 @@ import utime
 
 # LEDs
 pixels = 37
-led_pin = 5
+led_pin = 2 #5
 pixel_strip = None
 
 # Button
-btn_up_pin = 4
-btn_down_pin = 2
+btn_up_pin = 23 #4
+btn_down_pin = 22 #2
 intTimeUp = 0
 intTimeDown = 0
 intTimeMid = 0
@@ -20,7 +20,7 @@ btn_up = None
 btn_down = None
 ON = 1
 OFF = 0
-brightness = 0.1
+brightness = 0.5
 
 def set_light_on():
     color = hex_to_rgb(config.config[config.status["color"]])
@@ -28,19 +28,27 @@ def set_light_on():
     for i in range(pixels):
         pixel_strip[i] = color
     pixel_strip.write()
+    for i in range(pixels):
+        pixel_strip[i] = color
+    pixel_strip.write()
 
 def on_button_up():
     global brightness
     config.status["light"] = "💡"
-    brightness = 0.2
+    brightness = 1
+    set_light_on()
 
 def on_button_mid():
     global brightness
     config.status["light"] = "💡"
-    brightness = 0.1
+    brightness = 0.5
+    set_light_on()
 
 def on_button_down():
     config.status["light"] = "off"
+    for i in range(pixels):
+        pixel_strip[i] = (0, 0, 0)
+    pixel_strip.write()
     for i in range(pixels):
         pixel_strip[i] = (0, 0, 0)
     pixel_strip.write()
@@ -58,9 +66,9 @@ def initialize_io():
     pixel_strip.write()
 
     # Button
-    btn_down = Pin(btn_down_pin, Pin.OUT, value=ON)    
+    btn_down = Pin(btn_down_pin, Pin.OUT, value=ON)
     btn_down.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler)
-    btn_up = Pin(btn_up_pin, Pin.OUT, value=ON)    
+    btn_up = Pin(btn_up_pin, Pin.OUT, value=ON)
     btn_up.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=button_handler)
     button_handler(None)
 
@@ -95,5 +103,5 @@ def hex_to_rgb(clr):
     value = clr.lstrip('#')
     lv = len(value)
     color = tuple(int(value[i:i + lv // 3], 16) for i in range(0, lv, lv // 3))
-    color = tuple(brightness * x for x in color)
+    color = tuple(int(brightness * x) for x in color)
     return color
