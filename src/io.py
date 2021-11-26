@@ -2,11 +2,14 @@ from machine import Pin
 import neopixel
 import config
 import utime
+import time
+import _thread
 
 # LEDs
 pixels = 37
 led_pin = 2 #5
 pixel_strip = None
+pixel_pin = Pin(led_pin)
 
 # Button
 btn_up_pin = 23 #4
@@ -25,12 +28,18 @@ brightness = 0.5
 def set_light_on():
     color = hex_to_rgb(config.config[config.status["color"]])
     print(color)
-    for i in range(pixels):
-        pixel_strip[i] = color
+    set_color(color)
+
+def set_light_off():
+    set_color((0, 0, 0))
+
+def set_color(color):
+    #for i in range(pixels):
+    #    pixel_strip[i] = color
+    pixel_strip.fill(color)
     pixel_strip.write()
-    for i in range(pixels):
-        pixel_strip[i] = color
-    pixel_strip.write()
+        #pixel_pin.off()
+        #time.sleep_us(300)
 
 def on_button_up():
     global brightness
@@ -46,24 +55,18 @@ def on_button_mid():
 
 def on_button_down():
     config.status["light"] = "off"
-    for i in range(pixels):
-        pixel_strip[i] = (0, 0, 0)
-    pixel_strip.write()
-    for i in range(pixels):
-        pixel_strip[i] = (0, 0, 0)
-    pixel_strip.write()
+    set_light_off()
 
 def initialize_io():
     print("Initializing io ...")
     global btn_up
     global btn_down
     global pixel_strip
+    global pixel_pin
 
     # LEDs
-    pixel_strip = neopixel.NeoPixel(Pin(led_pin), pixels)
-    for i in range(pixels):
-        pixel_strip[i] = (0, 0, 0)
-    pixel_strip.write()
+    pixel_strip = neopixel.NeoPixel(pixel_pin, pixels)
+    set_light_off()
 
     # Button
     btn_down = Pin(btn_down_pin, Pin.OUT, value=ON)
