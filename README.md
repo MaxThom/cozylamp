@@ -6,8 +6,9 @@ https://techtutorialsx.com/2017/09/06/esp32-micropython-serving-html-from-the-fi
 https://www.cnx-software.com/2017/10/16/esp32-micropython-tutorials/
 https://github.com/pfalcon/picoweb
 
+# you must upload the project first to use wifi, else import network
 import wifi
-wifi.connectWifi("ASUS_28_2G", "88483306")
+wifi.connectWifi("NetComm 3296", "Huqupihuwo")
 import upip
 upip.install('picoweb')
 upip.install('pycopy-ulogging')

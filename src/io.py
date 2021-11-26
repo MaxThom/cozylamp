@@ -38,8 +38,8 @@ def set_color(color):
     #    pixel_strip[i] = color
     pixel_strip.fill(color)
     pixel_strip.write()
-        #pixel_pin.off()
-        #time.sleep_us(300)
+    pixel_pin.off()
+    #time.sleep_us(300)
 
 def on_button_up():
     global brightness
