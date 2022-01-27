@@ -7,13 +7,13 @@ import _thread
 
 # LEDs
 pixels = 37
-led_pin = 2 #5
+led_pin = 5 #2
 pixel_strip = None
 pixel_pin = Pin(led_pin)
 
 # Button
-btn_up_pin = 23 #4
-btn_down_pin = 22 #2
+btn_up_pin = 4 #23
+btn_down_pin = 2 #22
 intTimeUp = 0
 intTimeDown = 0
 intTimeMid = 0
