@@ -19,7 +19,10 @@ def updateStatus():
                     config.status["color"] = "on_color"
                 else:
                     config.status["color"] = "thinking_color"
-                io.set_light_on()
+
+                if config.status["light"] == "💡":
+                    io.set_light_on()
+
                 #print(response.status_code)
                 #print(response.reason)
                 response.close()
